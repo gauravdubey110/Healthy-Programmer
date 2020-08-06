@@ -1,10 +1,9 @@
-import time
 from pygame import mixer
 
+from  datetime import  datetime
+import  time
 
-# Music did not played hence I have printed it as well.
-def playMusic(file, stopper):
-    print(file)
+def musiconloop(file, stopper):
     mixer.init()
     mixer.music.load(file)
     mixer.music.play()
@@ -14,67 +13,50 @@ def playMusic(file, stopper):
             mixer.music.stop()
             break
 
+def log_now(msg):
+    with open("mylogs.txt", "a") as f:
+         f.write(f"{msg} {datetime.now()}\n")
 
 def IsOfficeTime(currenttime):
-    if currenttime > '09:00:00' and currenttime < '17:00:01': # this is office time stamp form 9:00 am to 5:00pm
+    if currenttime > '09:00:00' and currenttime < '17:00:01':
         return True
     else:
+        print("Sorry we only play this application in office hours i.e. in between 9 am to 5 pm ")
         return False
 
-
-NumberofWaterRemaining = 18
-
-WaterAfterEvery = 20*60  # Seconds  - 20 minutes
-EyeExerciseAfterEvery = 30*60  # Seconds - 30 minutes
-PhysicalExerciseAfterEvery = 45*60  # Seconds  - 45 minutes
-
-waterMp3 = 'water.mp3'
-eyesMp3 = 'rush.mp3'
-PhysicalMp3 = 'physical-exercise.mp3'
-
-currenttime = time.strftime('%H:%M:%S')
-WaterTakenAt = time.time()
-EyeExerciseAt = time.time()
-PhysicalExerciseAt = time.time()
-
-SleepTime = 60  # Sleep time in seconds It will check after every 60 seconds.
-
-def log_now(msg):
-    with open("../mylogs.txt", "a") as f:
-         f.write(f"{msg} {time.now()}\n")
-
-while (IsOfficeTime(currenttime)):
-    #     Check for water
-    if NumberofWaterRemaining > 0:
-
-        if (time.time() - WaterTakenAt) > WaterAfterEvery:  # water after every 20 minutes
-            print("Time to drink water")
-            while True:
-                playMusic(water.mp3)
-                if input("Enter Done if you had water: ").lower() == "done":
-                    log_now("Drank water at")
-                    WaterTakenAt = time.time()
-                    NumberofWaterRemaining -= 1
-                    break
-
-        if time.time() - EyeExerciseAt > EyeExerciseAfterEvery:
-            print("Time to do eye exercise")
-            while True:
-                playMusic(eyesMp3)
-                if input("Enter Done if you done eye exercise : ").lower() == "done":
-                    log_now("Eyes exercise done at")
-                    EyeExerciseAt = time.time()
-                    break
-
-        if time.time() - PhysicalExerciseAt > PhysicalExerciseAfterEvery:
-            print("Time to do Physical exercise")
-            while True:
-                playMusic(PhysicalMp3)
-                if input("Enter Done if you done Physical exercise : ").lower() == "done":
-                    PhysicalExerciseAt = time.time()
-                    log_now("Body exercise done at")
-                    break
-
-    time.sleep(SleepTime)
+if __name__ == '__main__':
+    # musiconloop("water.mp3", "stop")
+    init_water = time.time()
+    init_eyes = time.time()
+    init_exercise = time.time()
     currenttime = time.strftime('%H:%M:%S')
+    watersecs = 1*30
+    exesecs = 2*60
+    eyessecs = 3*60
+    SleepTime = 60
 
+    while (IsOfficeTime(currenttime)):
+
+        if time.time() - init_water > watersecs:
+            print("Water Drinking time. Enter 'D' to stop the alarm.")
+            musiconloop('water.mp3', 'D')
+            init_water = time.time()
+            log_now("Drank water at")
+            time.sleep(SleepTime)
+
+        if time.time() - init_eyes > eyessecs:
+            print("Eyes exercise time. Enter 'E' to stop the alarm.")
+            musiconloop('rush.mp3','E')
+            init_eyes = time.time()
+            log_now("Eyes exercise done at")
+            time.sleep(SleepTime)
+
+        if time.time() - init_exercise > exesecs:
+            print("Body Exercise time. Enter 'B' to stop the alarm.")
+            musiconloop('physical-exercise.mp3','B')
+            init_exercise = time.time()
+            log_now("Body exercise done at")
+            time.sleep(SleepTime)
+
+        time.sleep(SleepTime)
+        currenttime = time.strftime('%H:%M:%S')
