@@ -30,10 +30,10 @@ if __name__ == '__main__':
     init_eyes = time.time()
     init_exercise = time.time()
     currenttime = time.strftime('%H:%M:%S')
-    watersecs = 1*30
-    exesecs = 2*60
-    eyessecs = 3*60
-    SleepTime = 60
+    watersecs = 20*60 # Every 20 minutes
+    exesecs = 30*60 # Every 30 minutes
+    eyessecs = 45*60 # Every 45 minutes
+    SleepTime = 60 # Time gap of 1 minute after each task is performed
 
     while (IsOfficeTime(currenttime)):
 
